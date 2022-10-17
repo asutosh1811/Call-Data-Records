@@ -1,0 +1,308 @@
+        -:    0:Source:src/customer.cpp
+        -:    1:#include <customer.h>
+        -:    2:
+        -:    3:Utils custUtil;
+        -:    4:map<long, Customer> CustomersMap;
+        -:    5:
+        -:    6:
+    #####:    7:Customer::Customer()
+        -:    8:{
+        -:    9:  // default constructor
+    #####:   10:}
+        -:   11:
+        -:   12:// Parameterised Constructor
+    #####:   13:Customer::Customer(long msIsdn, string brandName, long inCallI, long outCallI, long inCallO, long outCallO, long down, long up, long incMsgI, long outMsgI, long incMsgO, long outMsgO)
+        -:   14:{
+    #####:   15:  this->MSISDN = msIsdn;
+        -:   16:  // this->MMC = MMC;
+    #####:   17:  this->brandName = brandName;
+    #####:   18:  this->inCallDurationO = inCallO;
+    #####:   19:  this->outCallDurationO = outCallO;
+    #####:   20:  this->downData = down;
+    #####:   21:  this->upData = up;
+    #####:   22:  this->inMsgO = incMsgO;
+    #####:   23:  this->outMsgO = outMsgO;
+    #####:   24:  this->inMsgI = incMsgI;
+    #####:   25:  this->outMsgI = outMsgI;
+    #####:   26:  this->inCallDurationI = inCallI;
+    #####:   27:  this->outCallDurationI = outCallI;
+    #####:   28:}
+        -:   29:// Setters Functions
+    #####:   30:void Customer::setOutCallDurationI(long outCallDurationI) { this->outCallDurationI = outCallDurationI; }
+    #####:   31:void Customer::setInCallDurationI(long inCallDurationI) { this->inCallDurationI = inCallDurationI; }
+    #####:   32:void Customer::setDownloadData(long downData) { this->downData = downData; }
+    #####:   33:void Customer::setUploadData(long upData) { this->upData = upData; }
+    #####:   34:void Customer::setInMsgI(long inMsgI) { this->inMsgI = inMsgI; }
+    #####:   35:void Customer::setOutMsgI(long outMsgI) { this->outMsgI = outMsgI; }
+    #####:   36:void Customer::setOutCallDurationO(long outCallDurationO) { this->outCallDurationO = outCallDurationO; }
+    #####:   37:void Customer::setInCallDurationO(long inCallDurationO) { this->inCallDurationO = inCallDurationO; }
+    #####:   38:void Customer::setInMsgO(long inMsgO) { this->inMsgO = inMsgO; }
+    #####:   39:void Customer::setOutMsgO(long outMsgO) { this->outMsgO = outMsgO; }
+        -:   40:// Getters Functions
+    #####:   41:long Customer::getInCallDurationI() { return inCallDurationI; }
+    #####:   42:long Customer::getOutCallDurationI() { return outCallDurationI; }
+    #####:   43:long Customer::getDownloadData() { return downData; }
+    #####:   44:long Customer::getUploadData() { return upData; }
+    #####:   45:long Customer::getInMsgI() { return inMsgI; }
+    #####:   46:long Customer::getOutMsgI() { return outMsgI; }
+    #####:   47:long Customer::getMSISDN() { return MSISDN; }
+    #####:   48:string Customer::getBrandName() { return brandName; }
+    #####:   49:long Customer::getInCallDurationO() { return inCallDurationO; }
+    #####:   50:long Customer::getOutCallDurationO() { return outCallDurationO; }
+    #####:   51:long Customer::getInMsgO() { return inMsgO; }
+    #####:   52:long Customer::getOutMsgO() { return outMsgO; }
+        -:   53:
+        -:   54:/*
+        -:   55: *  FUNCTION NAME : processCDR
+        -:   56: *
+        -:   57: *  DESCRIPTION   : It takes the data from data.cdr and puts it into STL containers after formatting
+        -:   58: *
+        -:   59: *  PARAMETERS    : None
+        -:   60: *
+        -:   61: *  RETURN        : bool
+        -:   62: *
+        -:   63: */
+    #####:   64:bool Customer::processCDR()
+        -:   65:{
+    #####:   66:  fstream fs;
+    #####:   67:  fs.open("data/data.cdr", ios::in);
+    #####:   68:  string line;
+    #####:   69:  string token;
+    #####:   70:  vector<string> parameters;
+    #####:   71:  if (fs)
+        -:   72:  {
+    #####:   73:    while (getline(fs, line))
+        -:   74:    {
+        -:   75:      // stringstream class check
+    #####:   76:      stringstream check(line);
+        -:   77:
+        -:   78:      // Tokenizing w.r.t. space '|'
+    #####:   79:      while (getline(check, token, '|'))
+        -:   80:      {
+    #####:   81:        parameters.push_back(token);
+        -:   82:      }
+        -:   83:
+        -:   84:      // parameters[3] --> call type.
+        -:   85:      // stol: converts the string as a argument in function call.
+    #####:   86:      long custMSISDN = stol(parameters[0]);
+    #####:   87:      string brand = parameters[1];
+        -:   88:
+    #####:   89:      long callDuration = stol(parameters[4]);
+    #####:   90:      long dataDownload = stol(parameters[5]);
+    #####:   91:      long dataUpload = stol(parameters[6]);  
+        -:   92:
+        -:   93:      // checking if the connection occurs within the operator
+    #####:   94:      if (parameters[2] == parameters[8])
+        -:   95:      {
+    #####:   96:        if (parameters[3] == "MTC")
+        -:   97:        {
+    #####:   98:          Customer newCust(custMSISDN, brand, callDuration, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    #####:   99:          CustomersMap[custMSISDN] = newCust;
+    #####:  100:        }
+    #####:  101:        else if (parameters[3] == "MTO")
+        -:  102:        {
+    #####:  103:          Customer newCust(custMSISDN, brand, 0, callDuration, 0, 0, 0, 0, 0, 0, 0, 0);
+    #####:  104:          CustomersMap[custMSISDN] = newCust;
+    #####:  105:        }
+    #####:  106:        else if (parameters[3] == "SMS-MT")
+        -:  107:        {
+    #####:  108:          Customer newCust(custMSISDN, brand, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+    #####:  109:          CustomersMap[custMSISDN] = newCust;
+    #####:  110:        }
+    #####:  111:        else if (parameters[3] == "SMS-MO")
+        -:  112:        {
+    #####:  113:          Customer newCust(custMSISDN, brand, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+    #####:  114:          CustomersMap[custMSISDN] = newCust;
+    #####:  115:        }
+    #####:  116:        else if (parameters[3] == "GPRS")
+        -:  117:        {
+    #####:  118:          Customer newCust(custMSISDN, brand, 0, 0, 0, 0, dataDownload, dataUpload, 0, 0, 0, 0);
+    #####:  119:          CustomersMap[custMSISDN] = newCust;
+    #####:  120:        }
+        -:  121:      }
+        -:  122:      // for outside operators
+        -:  123:      else 
+        -:  124:      {
+    #####:  125:        if (parameters[3] == "MTC")
+        -:  126:        {
+    #####:  127:          Customer newCust(custMSISDN, brand, 0, 0, callDuration, 0, 0, 0, 0, 0, 0, 0);
+    #####:  128:          CustomersMap[custMSISDN] = newCust;
+    #####:  129:        }
+    #####:  130:        else if (parameters[3] == "MTO")
+        -:  131:        {
+    #####:  132:          Customer newCust(custMSISDN, brand, 0, 0, 0, callDuration, 0, 0, 0, 0, 0, 0);
+    #####:  133:          CustomersMap[custMSISDN] = newCust;
+    #####:  134:        }
+    #####:  135:        else if (parameters[3] == "SMS-MT")
+        -:  136:        {
+    #####:  137:          Customer newCust(custMSISDN, brand, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
+    #####:  138:          CustomersMap[custMSISDN] = newCust;
+    #####:  139:        }
+    #####:  140:        else if (parameters[3] == "SMS-MO")
+        -:  141:        {
+    #####:  142:          Customer newCust(custMSISDN, brand, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+    #####:  143:          CustomersMap[custMSISDN] = newCust;
+    #####:  144:        }
+    #####:  145:        else if (parameters[3] == "GPRS")
+        -:  146:        {
+    #####:  147:          Customer newCust(custMSISDN, brand, 0, 0, 0, 0, dataDownload, dataUpload, 0, 0, 0, 0);
+    #####:  148:          CustomersMap[custMSISDN] = newCust;
+    #####:  149:        }
+        -:  150:      }
+    #####:  151:      parameters.clear();
+    #####:  152:    } // end of while loop
+        -:  153:
+        -:  154:    // closing data.cdr
+    #####:  155:    fs.close();
+        -:  156:  } // end of if block
+        -:  157:  else
+        -:  158:  {
+    #####:  159:    perror("data.cdr File error: ");
+    #####:  160:    exit(EXIT_FAILURE);
+        -:  161:    return false;
+        -:  162:  }
+        -:  163:
+    #####:  164:  return true;
+    #####:  165:} // end of processCDR()
+        -:  166:
+        -:  167:/*
+        -:  168: *  FUNCTION NAME	: mapToFile
+        -:  169: *
+        -:  170: *  DESCRIPTION		: It takes the data from operatorsMap and puts it into CB.txt after formatting
+        -:  171: *
+        -:  172: *  PARAMETERS		: None
+        -:  173: *
+        -:  174: *  RETURN 		    : bool
+        -:  175: *
+        -:  176: */
+    #####:  177:bool Customer::mapToFile()
+        -:  178:{
+    #####:  179:  fstream CB;
+    #####:  180:  CB.open("data/CB.txt", ios::out);
+        -:  181:
+    #####:  182:  if (CB)
+        -:  183:  {
+    #####:  184:    CB << "=========== CUSTOMER DATA BASE ===========\n\n";  map<long, Customer>::iterator cstr;
+    #####:  185:    for (cstr = CustomersMap.begin(); cstr != CustomersMap.end(); cstr++)
+        -:  186:    {
+    #####:  187:      Customer cstrData = cstr->second;
+    #####:  188:      CB << cstrToString(cstrData);
+    #####:  189:    }
+        -:  190:
+    #####:  191:    CB.close();
+        -:  192:  }
+        -:  193:  else
+        -:  194:  {
+    #####:  195:    custUtil.log(FATAL, "CB.txt could not be opened", S_LOGFILE);
+    #####:  196:    return false;
+        -:  197:  }
+        -:  198:
+    #####:  199:  return true;
+    #####:  200:} // end of mapToFile()
+        -:  201:
+        -:  202:/*
+        -:  203: *  FUNCTION NAME	: searchMSISDN
+        -:  204: *
+        -:  205: *  DESCRIPTION		: It takes a MSISDN as parameter, searches for it in the customersMap 
+        -:  206:                    and returns the formatted result.
+        -:  207: *
+        -:  208: *  PARAMETERS		: string custMSISDN
+        -:  209: *
+        -:  210: *  RETURN 		    : long
+        -:  211: *
+        -:  212: */
+    #####:  213:string Customer::searchMSISDN(long custMSISDN)
+        -:  214:{
+    #####:  215:  string result;
+        -:  216:
+    #####:  217:  map<long, Customer>::iterator cstr;
+    #####:  218:  for (cstr = CustomersMap.begin(); cstr != CustomersMap.end(); cstr++)
+        -:  219:  {
+    #####:  220:    Customer cstrData = cstr->second;
+    #####:  221:    if (cstrData.getMSISDN() == custMSISDN)
+        -:  222:    {
+    #####:  223:      result = cstrToString(cstrData);
+    #####:  224:      return result;
+        -:  225:    }
+    #####:  226:  }
+        -:  227:
+        -:  228:  // checking if MSISDN is invalid
+    #####:  229:  string notFound = "MSISDN doesn't exist.";
+    #####:  230:  return notFound;
+    #####:  231:} //end of searchMSISDN
+        -:  232:
+        -:  233:/*
+        -:  234: *  FUNCTION NAME	: cstrToString
+        -:  235: *
+        -:  236: *  DESCRIPTION		: It takes an object of Customer type, formats the data and returns it in a string.
+        -:  237: *
+        -:  238: *  PARAMETERS		: Customer cstrData
+        -:  239: *
+        -:  240: *  RETURN 		    : string
+        -:  241: *
+        -:  242: */
+    #####:  243:string Customer::cstrToString(Customer &cstrData)
+        -:  244:{
+    #####:  245:  ostringstream ss;
+    #####:  246:  ss.clear();
+        -:  247:
+    #####:  248:  ss << "Customers ID: " << cstrData.getMSISDN() << "(" << cstrData.getBrandName() << ")" << endl
+        -:  249:     << "\t"
+    #####:  250:     << "* Service within the mobile Customer *" << endl
+        -:  251:     << "\t"
+    #####:  252:     << "Incoming voice call duration:" << cstrData.getInCallDurationI() << endl
+        -:  253:     << "\t"
+    #####:  254:     << "Outgoing voice call duration:" << cstrData.getOutCallDurationI() << endl
+        -:  255:     << "\t"
+    #####:  256:     << "Incoming SMS messages:" << cstrData.getInMsgI() << endl
+        -:  257:     << "\t"
+    #####:  258:     << "Outgoing SMS messages:" << cstrData.getOutMsgI() << endl
+        -:  259:     << "\t"
+    #####:  260:     << "* Service outside the mobile Customer *" << endl
+        -:  261:     << "\t"
+    #####:  262:     << "Incoming voice call duration:" << cstrData.getInCallDurationO() << endl
+        -:  263:     << "\t"
+    #####:  264:     << "Outgoing voice call duration:" << cstrData.getOutCallDurationO() << endl
+        -:  265:     << "\t"
+    #####:  266:     << "Incoming SMS messages:" << cstrData.getInMsgO() << endl
+        -:  267:     << "\t"
+    #####:  268:     << "Outgoing SMS messages:" << cstrData.getOutMsgO() << endl
+        -:  269:     << "\t"
+    #####:  270:     << "* Internet use *" << endl
+        -:  271:     << "\t"
+    #####:  272:     << "MB downloaded:" << cstrData.getDownloadData() << " | MB uploaded:" << cstrData.getUploadData() << endl
+    #####:  273:     << endl;
+        -:  274:
+    #####:  275:  return ss.str();
+    #####:  276:} // end of cstrToString()
+        -:  277:
+        -:  278:/*
+        -:  279: *  FUNCTION NAME	: processAndCreateFile
+        -:  280: *
+        -:  281: *  DESCRIPTION		: It invokes processCDR and mapToFile and returns true on successful processing 
+        -:  282:                    and file creation, false otherwise.
+        -:  283: *
+        -:  284: *  PARAMETERS		: promise<bool> *isProcessed
+        -:  285: *
+        -:  286: *  RETURN 		    : bool
+        -:  287: *
+        -:  288: */
+    #####:  289:bool Customer::processAndCreateFile(promise<bool> *isProcessed)
+        -:  290:{
+    #####:  291:  bool process = processCDR();
+    #####:  292:  bool toFile = mapToFile();
+        -:  293:
+    #####:  294:  if (process && toFile)
+        -:  295:  {
+    #####:  296:    isProcessed->set_value(true);
+    #####:  297:    return true;
+        -:  298:  }
+        -:  299:
+    #####:  300:  isProcessed->set_value(false);
+    #####:  301:  return false;
+        -:  302:} //end of processAndCreateFile
+        -:  303:
+    #####:  304:Customer::~Customer()
+        -:  305:{
+        -:  306:  // default constructor
+    #####:  307:}

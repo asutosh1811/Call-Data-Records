@@ -1,0 +1,128 @@
+Userlogin::setUsername_UT_sunny : OK
+Userlogin::setPassword_UT_sunny : OK
+Userlogin::setUsername_UT_rainy1 : assertion
+Userlogin::setUsername_UT_rainy2 : assertion
+Userlogin::setUsername_UT_rainy3 : assertion
+Userlogin::setUsername_UT_rainy4 : assertion
+Userlogin::setPassword_UT_rainy1 : assertion
+Userlogin::setPassword_UT_rainy2 : assertion
+Service::setBrandName_UT_sunny : OK
+Service::setBrandName_UT_rainy : assertion
+Customer::setMSISDN_UT_sunny : OK
+Customer::setMSISDN_UT_rainy1 : assertion
+Customer::setMSISDN_UT_rainy2 : assertion
+Customer::setMSISDN_UT_rainy3 : assertion
+Customer::setMSISDN_UT_rainy4 : assertion
+Portip::setPort_UT_sunny : OK
+Portip::setIp_UT_sunny : OK
+Portip::setPort_UT_rainy1 : assertion
+Portip::setPort_UT_rainy2 : assertion
+Portip::setIp_UT_rainy1 : assertion
+Portip::setIp_UT_rainy2 : assertion
+CPPtest.cpp:93:Assertion
+Test name: Userlogin::setUsername_UT_rainy1
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Username not matching
+
+CPPtest.cpp:100:Assertion
+Test name: Userlogin::setUsername_UT_rainy2
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Username should not be greater than 20 chracters
+
+CPPtest.cpp:107:Assertion
+Test name: Userlogin::setUsername_UT_rainy3
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Username should not contain Space
+
+CPPtest.cpp:114:Assertion
+Test name: Userlogin::setUsername_UT_rainy4
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Username should not be NULL
+
+CPPtest.cpp:40:Assertion
+Test name: Userlogin::setPassword_UT_rainy1
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Incorrect password
+
+CPPtest.cpp:47:Assertion
+Test name: Userlogin::setPassword_UT_rainy2
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Password length is too small
+
+CPPtest.cpp:140:Assertion
+Test name: Service::setBrandName_UT_rainy
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Brand name not found
+
+CPPtest.cpp:190:Assertion
+Test name: Customer::setMSISDN_UT_rainy1
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Incorrect MSISDN: no alphabetical character allowed
+
+CPPtest.cpp:197:Assertion
+Test name: Customer::setMSISDN_UT_rainy2
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Incorrect MSISDN: Exact 7 characters allowed
+
+CPPtest.cpp:204:Assertion
+Test name: Customer::setMSISDN_UT_rainy3
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Incorrect MSISDN: no special characters allowed
+
+CPPtest.cpp:210:Assertion
+Test name: Customer::setMSISDN_UT_rainy4
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- Incorrect MSISDN: no Space allowed
+
+CPPtest.cpp:244:Assertion
+Test name: Portip::setPort_UT_rainy1
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- port no not matched:Connection not established
+
+CPPtest.cpp:249:Assertion
+Test name: Portip::setPort_UT_rainy2
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- port no should not contain space:Connection not established
+
+CPPtest.cpp:277:Assertion
+Test name: Portip::setIp_UT_rainy1
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- ip not matched:Connection not established
+
+CPPtest.cpp:282:Assertion
+Test name: Portip::setIp_UT_rainy2
+equality assertion failed
+- Expected: 1
+- Actual  : 0
+- ip should not contain space:Connection not established
+
+Failures !!!
+Run: 21   Failure total: 15   Failures: 15   Errors: 0
